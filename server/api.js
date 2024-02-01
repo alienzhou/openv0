@@ -133,6 +133,7 @@ app.get("/components/get", async (req, res) => {
 
 app.post("/components/new/description", async (req, res) => {
   res.setHeader("Content-Type", "text/plain");
+  res.setHeader("X-Accel-Buffering", "no");
   const duplexStream = new PassThrough();
   duplexStream.pipe(res);
   const generated = await multipass.preset({

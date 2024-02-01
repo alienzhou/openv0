@@ -18,7 +18,7 @@ export default function Browse() {
 
 	async function fetchComponents(){
 		const response = await fetch(
-			`http://localhost:3000/components/list?framework=react&components=nextui&icons=lucide`
+			`/components/list?framework=react&components=nextui&icons=lucide`
 		);
 		const data = await response.json();
 		console.log(data)
@@ -69,7 +69,7 @@ export default function Browse() {
 			description: generateMode === `description` ? userInputDescription : userInputJson,
 		})
 		const response = await fetch(
-			`http://localhost:3000/components/new/${generateMode}` ,
+			`/components/new/${generateMode}` ,
 			{
 				method: "POST",
 				headers: {

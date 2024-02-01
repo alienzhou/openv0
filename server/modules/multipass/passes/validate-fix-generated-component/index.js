@@ -3,6 +3,7 @@ const validate_check = require(
   `../validate-check-generated-component/index.js`,
 ).validate;
 
+const { HttpsProxyAgent } = require("https-proxy-agent");
 const { OpenAI } = require("openai");
 const tiktoken = require("@dqbd/tiktoken");
 const tiktokenEncoder = tiktoken.get_encoding("cl100k_base");
@@ -256,6 +257,10 @@ async function run(req) {
     const stream = await openai.chat.completions.create({
       ...gptPrompt,
       stream: true,
+    }, {
+      proxy: false,
+      httpAgent: new HttpsProxyAgent(process.env.HTTP_PROXY || process.env.http_proxy),
+      httpsAgent: new HttpsProxyAgent(process.env.HTTPS_PROXY || process.env.https_proxy)
     });
     for await (const part of stream) {
       process.stdout.write(part.choices[0]?.delta?.content || "");

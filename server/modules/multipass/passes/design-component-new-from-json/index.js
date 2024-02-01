@@ -4,6 +4,7 @@ const config = require("mongoose-schema-jsonschema/config");
 const { Schema } = require("mongoose");
 const schema = require("schm");
 const { validate } = schema;
+const { HttpsProxyAgent } = require("https-proxy-agent");
 const { OpenAI } = require("openai");
 require("dotenv").config();
 const path = require("path");
@@ -130,6 +131,10 @@ async function run(req) {
   const stream = await openai.chat.completions.create({
     ...gptPrompt,
     stream: true,
+  }, {
+    proxy: false,
+    httpAgent: new HttpsProxyAgent(process.env.HTTP_PROXY || process.env.http_proxy),
+    httpsAgent: new HttpsProxyAgent(process.env.HTTPS_PROXY || process.env.https_proxy)
   });
   for await (const part of stream) {
     try {

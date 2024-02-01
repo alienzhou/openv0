@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { LocalIndex } = require(`vectra`);
+const { HttpsProxyAgent } = require("https-proxy-agent");
 const { OpenAI } = require("openai");
 require("dotenv").config();
 const openai = new OpenAI({
@@ -33,6 +34,10 @@ async function run(query) {
               await openai.embeddings.create({
                 input: e,
                 model: `text-embedding-ada-002`,
+              }, {
+                proxy: false,
+                httpAgent: new HttpsProxyAgent(process.env.HTTP_PROXY || process.env.http_proxy),
+                httpsAgent: new HttpsProxyAgent(process.env.HTTPS_PROXY || process.env.https_proxy)
               })
             ).data[0].embedding,
             10,
